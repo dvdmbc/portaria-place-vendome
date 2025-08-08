@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Place Vandome - Correspondências e encomendas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .tower {
+      margin-bottom: 20px;
+    }
+
+    .apartments {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .apt-button {
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+      background-color: #e2e8f0;
+      color: #1a202c;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .apt-button.selected {
+      background-color: #0070f3;
+      color: #fff;
+      opacity: 0.7;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 10px;
+    }
+
+    #clear {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      background-color: #ef4444;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🏢 Condomínio Place Vandome - Correspondências e encomendas</h1>
+  <div id="ui">
+    <!-- Towers will be generated here -->
+  </div>
+
+  <textarea id="message" readonly>
+🚨 Atenção!!
+
+📦 Correspondências e encomendas para serem retiradas na portaria:
+</textarea>
+  <button id="clear">Limpar Seleções</button>
+
+  <script>
+    const towers = ['A', 'B', 'C'];
+    const ui = document.getElementById('ui');
+    const messageEl = document.getElementById('message');
+    const selected = [];
+
+    function updateMessage() {
+      const base = `🚨 Atenção!!
+      
+📦 Correspondências e encomendas para serem retiradas na portaria:\n`;
+      let msg = base;
+      towers.forEach(block => {
+        const list = selected.filter(a => a.endsWith(block));
+        if (list.length) {
+          msg += `\n🏢 Bloco ${block}:\n`;
+          msg += list.join(', ') + '.\n';
+        }
+      });
+      msg += `\n☎️ Para mais informações, ligue  na portaria no ramal 2000.`;
+      messageEl.value = msg;
+    }
+
+    towers.forEach(block => {
+      const div = document.createElement('div');
+      div.className = 'tower';
+      const title = document.createElement('h2');
+      title.textContent = `Torre ${block}`;
+      div.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'apartments';
+
+      for (let floor = 1; floor <= 18; floor++) {
+        for (let unit = 1; unit <= 4; unit++) {
+          const apt = `${floor}${unit}${block}`;
+          const btn = document.createElement('button');
+          btn.textContent = apt;
+          btn.className = 'apt-button';
+          btn.addEventListener('click', () => {
+            const idx = selected.indexOf(apt);
+            if (idx === -1) {
+              selected.push(apt);
+              btn.classList.add('selected');
+            } else {
+              selected.splice(idx, 1);
+              btn.classList.remove('selected');
+            }
+            // Ordena selection
+            selected.sort((a, b) => {
+              const numA = parseInt(a, 10);
+              const numB = parseInt(b, 10);
+              if (numA !== numB) return numA - numB;
+              return a.slice(-1).localeCompare(b.slice(-1));
+            });
+            updateMessage();
+          });
+          grid.appendChild(btn);
+        }
+      }
+      div.appendChild(grid);
+      ui.appendChild(div);
+    });
+
+    document.getElementById('clear').addEventListener('click', () => {
+      selected.length = 0;
+      document.querySelectorAll('.apt-button.selected').forEach(btn => btn.classList.remove('selected'));
+      updateMessage();
+    });
+
+    updateMessage();
+  </script>
+</body>
+
+</html>
