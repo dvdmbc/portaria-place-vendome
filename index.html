@@ -9,6 +9,10 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
+      max-width: 1024px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 50px;
     }
 
     .tower {
@@ -18,17 +22,18 @@
     .apartments {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 4px;
     }
 
     .apt-button {
-      padding: 8px;
+      padding: 12px;
       border: none;
       border-radius: 4px;
       background-color: #e2e8f0;
       color: #1a202c;
       cursor: pointer;
       transition: opacity 0.2s;
+      font-size: larger;
     }
 
     .apt-button.selected {
@@ -37,30 +42,88 @@
       opacity: 0.7;
     }
 
+    .apt-button:hover {
+      opacity: 0.9;
+    }
+
+    #message-container {
+      /* margin-top: 20px; */
+      max-width: 600px;
+    }
+
+    #message {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      font-family: monospace;
+    }
+
     textarea {
       width: 100%;
       resize: none;
       overflow: hidden;
     }
 
-    #clear {
-      margin-top: 10px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
-      background-color: #ef4444;
-      color: #fff;
-      cursor: pointer;
+    #ui {
+      margin-bottom: 20px;
+      margin: auto;
+      text-align: center;
     }
 
+    #clear,
     #copy {
       margin-top: 10px;
       padding: 8px 12px;
       border: none;
       border-radius: 4px;
-      background-color: green;
       color: #fff;
       cursor: pointer;
+      /* width: 100%; */
+      font-size: large;
+
+    }
+
+    #clear {
+      background-color: #ef4444;
+    }
+
+    #copy {
+      background-color: green;
+    }
+
+    @media (max-width: 1024px) {
+      body {
+        padding: 0 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .apt-button {
+        padding: 12px;
+        border: none;
+        border-radius: 4px;
+        background-color: #e2e8f0;
+        color: #1a202c;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        font-size: large;
+      }
+
+      #message-container>button {
+        width: 100%;
+        font-size: larger;
+      }
+
+      @media (max-width: 400px) {
+        .apt-button {
+          padding: 8px;
+          font-size: medium;
+        }
+      }
     }
   </style>
 </head>
@@ -71,13 +134,13 @@
     <!-- Towers will be generated here -->
   </div>
 
-  <textarea id="message" readonly>
-🚨 Atenção!!
+  <div id="message-container">
+    <textarea id="message" rows="10" readonly></textarea>
+    <br />
+    <button id="copy">Copiar Mensagem</button>
+    <button id="clear">Limpar Seleção</button>
 
-📦 Correspondências e encomendas para serem retiradas na portaria:
-</textarea>
-  <button id="copy">Copiar mensagem</button>
-  <button id="clear">Limpar seleções</button>
+  </div>
 
   <script>
     const towers = ['A', 'B', 'C'];
@@ -156,7 +219,7 @@
     document.getElementById('copy').addEventListener('click', () => {
       messageEl.select(); // Select the text in the textarea
       document.execCommand('copy'); // Copy the selected text to the clipboard
-      alert('Mensagem copiada para a área de transferência!'); // Optional: Notify the user
+      alert('Mensagem copiada!'); // Optional: Notify the user
     });
   </script>
 </body>
