@@ -39,8 +39,8 @@
 
     textarea {
       width: 100%;
-      height: 100px;
-      margin-top: 10px;
+      resize: none;
+      overflow: hidden;
     }
 
     #clear {
@@ -49,6 +49,16 @@
       border: none;
       border-radius: 4px;
       background-color: #ef4444;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    #copy {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      background-color: green;
       color: #fff;
       cursor: pointer;
     }
@@ -66,7 +76,8 @@
 
 📦 Correspondências e encomendas para serem retiradas na portaria:
 </textarea>
-  <button id="clear">Limpar Seleções</button>
+  <button id="copy">Copiar mensagem</button>
+  <button id="clear">Limpar seleções</button>
 
   <script>
     const towers = ['A', 'B', 'C'];
@@ -75,7 +86,7 @@
     const selected = [];
 
     function updateMessage() {
-      const base = `🚨 Atenção!!
+      const base = `🚨 Atenção!
       
 📦 Correspondências e encomendas para serem retiradas na portaria:\n`;
       let msg = base;
@@ -88,6 +99,8 @@
       });
       msg += `\n☎️ Para mais informações, ligue  na portaria no ramal 2000.`;
       messageEl.value = msg;
+      messageEl.style.height = 'auto'; // Reset height to recalculate
+      messageEl.style.height = messageEl.scrollHeight + 'px'; // Adjust height to fit content
     }
 
     towers.forEach(block => {
@@ -138,6 +151,13 @@
     });
 
     updateMessage();
+    messageEl.style.height = messageEl.scrollHeight + 'px'; // Initial adjustment for content height
+
+    document.getElementById('copy').addEventListener('click', () => {
+      messageEl.select(); // Select the text in the textarea
+      document.execCommand('copy'); // Copy the selected text to the clipboard
+      alert('Mensagem copiada para a área de transferência!'); // Optional: Notify the user
+    });
   </script>
 </body>
 
